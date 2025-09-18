@@ -38,7 +38,9 @@ export class BookShoppingService {
     }
 
     if (quantity > book.stockQuantity) {
-      throw new Error(`Insufficient stock quantity! In stock, just have ${book.stockQuantity}`);
+      throw new Error(
+        `Insufficient stock quantity! In stock, just have ${book.stockQuantity}`
+      );
     }
 
     let cart = this.db.getCartByUserId(userId);
@@ -83,7 +85,9 @@ export class BookShoppingService {
       }
 
       if (item.quantity > book.stockQuantity) {
-        throw new Error(`Insufficient stock for book: ${book.title}! Just have ${book.stockQuantity}.`);
+        throw new Error(
+          `Insufficient stock for book: ${book.title}! Just have ${book.stockQuantity}.`
+        );
       }
 
       totalAmount += book.price * item.quantity;
@@ -150,7 +154,7 @@ export class BookShoppingService {
     return true;
   }
 
-  // Create review 
+  // Create review
   createReview(
     userId: number,
     bookId: number,

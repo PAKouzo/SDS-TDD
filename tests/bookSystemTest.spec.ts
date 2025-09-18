@@ -17,8 +17,8 @@ test.beforeEach(async () => {
 
   // Setup test data
   testCategory = service.createCategory({
-    name: "Fiction",
-    description: "Fiction books",
+    name: "Science",
+    description: "Science books",
   });
 
   testBook = service.createBook({
@@ -26,15 +26,15 @@ test.beforeEach(async () => {
     author: "Test Author",
     publisher: "Test Publisher",
     isbn: "1234567890",
-    price: 19.99,
+    price: 10,
     stockQuantity: 10,
     description: "A test book",
     categoryId: testCategory.id,
   });
 
   testUser = service.registerUser({
-    username: "testuser",
-    password: "password123",
+    username: "testUser",
+    password: "12345678",
     email: "test@example.com",
     fullName: "Test User",
     address: "123 Test St",
@@ -50,8 +50,8 @@ test.afterEach(async () => {
 test.describe("Test for user", () => {
   test("Register user successfully", async () => {
     const newUser = service.registerUser({
-      username: "newuser",
-      password: "password456",
+      username: "newUser",
+      password: "12345678",
       email: "newuser@example.com",
       fullName: "New User",
       address: "456 New St",
@@ -60,15 +60,15 @@ test.describe("Test for user", () => {
     });
 
     expect(newUser.id).toBeGreaterThan(0);
-    expect(newUser.username).toBe("newuser");
+    expect(newUser.username).toBe("newUser");
     expect(newUser.email).toBe("newuser@example.com");
   });
 
   test("Username of user has already existed", async () => {
     expect(() => {
       service.registerUser({
-        username: "testuser",
-        password: "password789",
+        username: "testUser",
+        password: "12345678",
         email: "duplicate@example.com",
         fullName: "Duplicate User",
         address: "789 Duplicate St",
@@ -79,13 +79,13 @@ test.describe("Test for user", () => {
   });
 
   test("Login successfully", async () => {
-    const loggedInUser = service.loginUser("testuser", "password123");
+    const loggedInUser = service.loginUser("testUser", "12345678");
     expect(loggedInUser).not.toBeNull();
-    expect(loggedInUser?.username).toBe("testuser");
+    expect(loggedInUser?.username).toBe("testUser");
   });
 
   test("Login failed! Please try again!", async () => {
-    const loggedInUser = service.loginUser("testuser", "wrongpassword");
+    const loggedInUser = service.loginUser("testUser", "123456789");
     expect(loggedInUser).toBeNull();
   });
 });
@@ -93,20 +93,20 @@ test.describe("Test for user", () => {
 test.describe("Test for category", () => {
   test("Create category successfully", async () => {
     const category = service.createCategory({
-      name: "Science",
-      description: "Science books",
+      name: "Math",
+      description: "Math books",
     });
 
     expect(category.id).toBeGreaterThan(0);
-    expect(category.name).toBe("Science");
-    expect(category.description).toBe("Science books");
+    expect(category.name).toBe("Math");
+    expect(category.description).toBe("Math books");
   });
 });
 
 test.describe("Test for book", () => {
   test("Create book successfully", async () => {
     const book = service.createBook({
-      title: "Another Test Book",
+      title: "Another Book",
       author: "Another Author",
       publisher: "Another Publisher",
       isbn: "0987654321",
@@ -117,7 +117,7 @@ test.describe("Test for book", () => {
     });
 
     expect(book.id).toBeGreaterThan(0);
-    expect(book.title).toBe("Another Test Book");
+    expect(book.title).toBe("Another Book");
     expect(book.price).toBe(29.99);
     expect(book.stockQuantity).toBe(5);
   });
@@ -125,13 +125,13 @@ test.describe("Test for book", () => {
   test("Create book but category is invalid", async () => {
     expect(() => {
       service.createBook({
-        title: "Invalid Book",
-        author: "Invalid Author",
-        publisher: "Invalid Publisher",
+        title: "Hieu Book",
+        author: "Hieu Author",
+        publisher: "Hieu Publisher",
         isbn: "1111111111",
-        price: 19.99,
+        price: 10,
         stockQuantity: 3,
-        description: "Invalid book",
+        description: "Hieu book",
         categoryId: 999,
       });
     }).toThrow("Category not found");
@@ -191,7 +191,7 @@ test.describe("Test checkout", () => {
     expect(orders.length).toBe(1);
     expect(orders[0].bookId).toBe(testBook.id);
     expect(orders[0].quantity).toBe(3);
-    expect(totalAmount).toBe(59.97);
+    expect(totalAmount).toBe(30);
 
     const book = db.getBookById(testBook.id);
     expect(book!.stockQuantity).toBe(7);
@@ -326,7 +326,7 @@ test.describe("Integration Tests", () => {
       author: "Second Author",
       publisher: "Second Publisher",
       isbn: "2222222222",
-      price: 25.99,
+      price: 10,
       stockQuantity: 8,
       description: "Second test book",
       categoryId: testCategory.id,
@@ -337,7 +337,7 @@ test.describe("Integration Tests", () => {
 
     const { orders, totalAmount } = service.checkout(testUser.id);
     expect(orders.length).toBe(2);
-    expect(totalAmount).toBe(65.97);
+    expect(totalAmount).toBe(30);
 
     const payment = service.processPayment(orders[0].id, "paypal", 39.98);
     expect(payment.method).toBe("paypal");
@@ -358,8 +358,8 @@ test.describe("Integration Tests", () => {
 
   test("Handle stock validation across multiple users", async () => {
     const user2 = service.registerUser({
-      username: "user2",
-      password: "password456",
+      username: "IPMAC",
+      password: "12345678",
       email: "user2@example.com",
       fullName: "User Two",
       address: "456 Second St",

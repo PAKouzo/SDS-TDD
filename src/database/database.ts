@@ -150,5 +150,4 @@ export class Database {
     this.reviews = [];
     this.nextId = 1;
   }
-
 }
